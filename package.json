@@ -1,0 +1,46 @@
+{
+	"name": "responsive-controls",
+	"version": "1.0.0",
+	"description": "Add responsive controls to block editor",
+	"main": "gulpfile.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"check-engines": "wp-scripts check-engines",
+		"check-licenses": "wp-scripts check-licenses",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"lint:md:docs": "wp-scripts lint-md-docs",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start",
+		"test:e2e": "wp-scripts test-e2e",
+		"test:unit": "wp-scripts test-unit-js"
+	},
+	"keywords": [
+		"Responsive controls",
+		"block editor",
+		"full site editing"
+	],
+	"author": "wpspices",
+	"license": "ISC",
+	"devDependencies": {
+		"@wordpress/scripts": "^24.0.0",
+		"autoprefixer": "^10.4.2",
+		"cssnano": "^5.0.16",
+		"del": "^6.0.0",
+		"gulp": "^4.0.2",
+		"gulp-concat": "^2.6.1",
+		"gulp-git": "^2.10.1",
+		"gulp-line-ending-corrector": "^1.0.3",
+		"gulp-notify": "^4.0.0",
+		"gulp-order": "^1.2.0",
+		"gulp-postcss": "^9.0.1",
+		"gulp-prompt": "^1.2.0",
+		"gulp-rename": "^2.0.0",
+		"gulp-uglify": "^3.0.2",
+		"gulp-wp-pot": "^2.5.0",
+		"gulp-zip": "^5.1.0"
+	}
+}
