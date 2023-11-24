@@ -7,7 +7,7 @@
  * @responsive-controls
  * Plugin Name:       Responsive controls
  * Description:       Add responsive controls to blocks
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            wpspices
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -25,7 +25,7 @@ if ( ! class_exists( 'Responsive_Controls' ) ) {
 
 	class Responsive_Controls {
 
-		public $version = '1.0.0';
+		public $version = '1.0.1';
 
 		// The instance of this class
 		private static $instance = null;
