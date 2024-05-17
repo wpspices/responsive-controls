@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Responsive controls ===
 Contributors: wpspices
 Tags: responsive controls, responsive, block, responsive block
 Requires at least: 6.5
