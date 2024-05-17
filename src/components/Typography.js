@@ -26,7 +26,7 @@ const Typography = ( props ) => {
 	} = attributes;
 
 	const deviceType = useSelect( ( select ) => {
-		return select( 'core/edit-post' ).__experimentalGetPreviewDeviceType();
+		return select( 'core/editor' ).getDeviceType();
 	}, [] );
 
 	const getTypographyValue = ( name ) => {
