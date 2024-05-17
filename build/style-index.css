@@ -1,8 +1,1 @@
-/*!***************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/style.scss ***!
-  \***************************************************************************************************************************************************************************************************************************************/
-.components-panel__row.justify-content-end {
-  justify-content: end;
-}
-
-/*# sourceMappingURL=style-index.css.map*/
+.components-panel__row.justify-content-end{justify-content:end}
