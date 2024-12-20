@@ -2,8 +2,8 @@
 Contributors: wpspices
 Tags: responsive controls, responsive, block, responsive block
 Requires at least: 6.5
-Tested up to: 6.5
-Stable tag: 1.0.2
+Tested up to: 6.7
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,10 @@ Add following responsive controls to blocks:
 
 
 == Changelog ==
+
+= 1.0.3 =
+* Fixed responsive control toggle
+* Updated rangecontrol component
 
 = 1.0.2 =
 * Updated to getDeviceType & setDeviceType function for preview responsive changes
