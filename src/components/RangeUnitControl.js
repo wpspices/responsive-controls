@@ -47,7 +47,7 @@ const RangeUnitControl = ( props ) => {
 
 	return (
 		<PanelRow>
-			<fieldset className="components-border-radius-control">
+			<fieldset className="components-border-radius-control responsive-controls-rangeunitcontrol">
 				<HStack>
 					<legend>
 						{ rcsIsEmpty( rangeLabel ) ? '' : rangeLabel }
@@ -65,9 +65,11 @@ const RangeUnitControl = ( props ) => {
 						min={ rangeMin }
 						max={ rangeMax[ getQtyOrunit( rangeAttrValue ) ] }
 						step={ rangeStep }
+						__nextHasNoMarginBottom
 					/>
 					<UnitControl
 						className="components-border-radius-control__unit-control"
+                        size={ '__unstable-large' }
 						units={ units }
 						value={ rangeAttrValue }
 						onChange={ ( rangeAttrValue ) =>

@@ -7,7 +7,7 @@
  * @responsive-controls
  * Plugin Name:       Responsive controls
  * Description:       Add responsive controls to blocks
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            wpspices
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -25,7 +25,7 @@ if ( ! class_exists( 'Responsive_Controls' ) ) {
 
 	class Responsive_Controls {
 
-		public $version = '1.0.2';
+		public $version = '1.0.3';
 
 		// The instance of this class
 		private static $instance = null;
@@ -52,12 +52,18 @@ if ( ! class_exists( 'Responsive_Controls' ) ) {
 
 		// Enqueue block editor assets
 		public function enqueue_editor_scripts() {
+			$require_assets = trailingslashit( plugin_dir_path( __FILE__ ) ) . 'build/index.asset.php';
+			if ( ! file_exists( $require_assets ) ) {
+				return;
+			}
+
+			$require_assets = include( $require_assets );
 
 			// enqueue script
-			wp_enqueue_script( 'responsive-controls-script', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'build/index.js', array('wp-block-editor', 'wp-components', 'wp-compose', 'wp-data', 'wp-element', 'wp-hooks', 'wp-i18n'), $this->version, false );
+			wp_enqueue_script( 'responsive-controls-script', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'build/index.js', $require_assets['dependencies'], $require_assets['version'], false );
 
 			// enqueue style
-			wp_enqueue_style( 'responsive-controls-style', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'build/style-index.css', array(), $this->version, 'all' );
+			wp_enqueue_style( 'responsive-controls-style', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'build/style-index.css', array(), $require_assets['version'], 'all' );
 
 		}
 
