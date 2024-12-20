@@ -39,6 +39,7 @@ const withInspectorControls = createHigherOrderComponent( ( BlockEdit ) => {
 							onChange={ ( useResponsiveControls ) =>
 								setAttributes( { useResponsiveControls } )
 							}
+							__nextHasNoMarginBottom
 						/>
 						{ useResponsiveControls ? (
 							<>
