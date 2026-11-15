@@ -199,6 +199,7 @@ if ( ! class_exists( 'Responsive_Controls' ) ) {
 
 			$unique_styles = array_unique( self::$collected_styles );
 			$combined_css  = implode( "\n", $unique_styles );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS is composed of sanitized dimension properties stripped of HTML tags.
 			echo '<style id="responsive-controls-frontend-css">' . wp_strip_all_tags( wp_unslash( $combined_css ) ) . "</style>\n";
 		}
 
