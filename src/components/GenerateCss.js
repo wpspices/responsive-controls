@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { rcsIsEmpty, boxControlCompileCss } from '../helper';
 
 const GenerateCss = ( props ) => {
@@ -15,28 +15,9 @@ const GenerateCss = ( props ) => {
 		responsiveControlsTStyle,
 	} = attributes;
 
-	useEffect( () => {
-		let setCss = true;
-
-		if ( setCss ) {
-			setAttributes( {
-				responsiveControlsCss: getCss( '.rcsid-' + clientId ),
-				responsiveControlsID: clientId,
-			} );
-			setLocalCSS( getCss( '#block-' + clientId ) );
-		}
-
-		return () => {
-			setCss = false;
-		};
-	}, [
-		responsiveControlsHideInDesktop,
-		responsiveControlsHideInTab,
-		responsiveControlsHideInMobile,
-		responsiveControlsDStyle,
-		responsiveControlsMStyle,
-		responsiveControlsTStyle,
-	] );
+	const blockId =
+		responsiveControlsID ||
+		clientId.replace( /[^a-zA-Z0-9_-]/g, '' ).slice( 0, 8 );
 
 	const boxControls = [ 'padding', 'margin' ];
 
@@ -73,7 +54,7 @@ const GenerateCss = ( props ) => {
 	};
 
 	const getCss = ( selector ) => {
-		//Desktop css
+		// Desktop css
 		return `
             ${ getDevicsCss( responsiveControlsDStyle, selector, 'Desktop' ) }
 
@@ -95,11 +76,35 @@ const GenerateCss = ( props ) => {
         `;
 	};
 
-	const [ localCSS, setLocalCSS ] = useState(
-		getCss( '#block-' + clientId )
-	);
+	useEffect( () => {
+		const targetSelector = '.rcsid-' + blockId;
+		const nextFrontendCss = getCss( targetSelector );
 
-	return <style>{ localCSS }</style>;
+		if (
+			nextFrontendCss !== responsiveControlsCss ||
+			blockId !== responsiveControlsID
+		) {
+			setAttributes( {
+				responsiveControlsCss: nextFrontendCss,
+				responsiveControlsID: blockId,
+			} );
+		}
+	}, [
+		blockId,
+		responsiveControlsID,
+		responsiveControlsCss,
+		responsiveControlsHideInDesktop,
+		responsiveControlsHideInTab,
+		responsiveControlsHideInMobile,
+		responsiveControlsDStyle,
+		responsiveControlsMStyle,
+		responsiveControlsTStyle,
+	] );
+
+	// Calculate current block CSS directly during render to prevent stale state / lag
+	const editorCss = getCss( '#block-' + clientId );
+
+	return <style>{ editorCss }</style>;
 };
 
 export default GenerateCss;

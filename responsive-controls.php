@@ -7,7 +7,7 @@
  * @responsive-controls
  * Plugin Name:       Responsive controls
  * Description:       Add responsive controls to blocks
- * Version:           1.0.3
+ * Version:           1.0.4
  * Author:            wpspices
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -25,7 +25,7 @@ if ( ! class_exists( 'Responsive_Controls' ) ) {
 
 	class Responsive_Controls {
 
-		public $version = '1.0.3';
+		public $version = '1.0.4';
 
 		// The instance of this class
 		private static $instance = null;
@@ -115,51 +115,91 @@ if ( ! class_exists( 'Responsive_Controls' ) ) {
 			return $metadata;
 		}
 
+		/**
+		 * Collected responsive CSS for blocks on the current page.
+		 *
+		 * @var array
+		 */
+		private static $collected_styles = array();
+
+		/**
+		 * Whether the footer hook has been attached.
+		 *
+		 * @var bool
+		 */
+		private static $footer_hook_added = false;
+
 		// Render block
 		public function render_block( $block_content, $block ) {
-			
-			if ( ! empty( $block['attrs']['useResponsiveControls'] ) &&  ! empty( $block['attrs']['responsiveControlsID'] ) && ! empty( $block['attrs']['responsiveControlsCss'] ) ) {
-				// Class with unique responsiveControlsID
-				$class = 'rcsid-' . esc_attr( $block['attrs']['responsiveControlsID'] );
+			if ( empty( $block_content ) ) {
+				return $block_content;
+			}
 
-				// Add class to block
-				if ( false === strpos( $block_content, 'class="' ) ) {
-					$block_content = preg_replace(
-						'/' . preg_quote( '>', '/' ) . '/',
-						' class="' . $class . '" > ',
-						$block_content,
-						1
-					);
+			if ( ! empty( $block['attrs']['useResponsiveControls'] ) && ! empty( $block['attrs']['responsiveControlsID'] ) && ! empty( $block['attrs']['responsiveControlsCss'] ) ) {
+				// Class with unique responsiveControlsID
+				$class = 'rcsid-' . sanitize_html_class( $block['attrs']['responsiveControlsID'] );
+
+				// Add class to block using WP_HTML_Tag_Processor if available (WP 6.2+)
+				if ( class_exists( 'WP_HTML_Tag_Processor' ) ) {
+					$processor = new WP_HTML_Tag_Processor( $block_content );
+					if ( $processor->next_tag() ) {
+						$processor->add_class( $class );
+						$block_content = $processor->get_updated_html();
+					}
 				} else {
-					$block_content = preg_replace(
-						'/' . preg_quote( 'class="', '/' ) . '/',
-						'class="' . $class . ' ',
-						$block_content,
-						1
-					);
+					if ( false === strpos( $block_content, 'class="' ) ) {
+						$block_content = preg_replace(
+							'/' . preg_quote( '>', '/' ) . '/',
+							' class="' . esc_attr( $class ) . '" > ',
+							$block_content,
+							1
+						);
+					} else {
+						$block_content = preg_replace(
+							'/' . preg_quote( 'class="', '/' ) . '/',
+							'class="' . esc_attr( $class ) . ' ',
+							$block_content,
+							1
+						);
+					}
 				}
 
-				// enqueue block css
-				$this->enqueue_block_responsive_styles( $block['attrs']['responsiveControlsCss'], 11 );
+				// Enqueue block css
+				$this->enqueue_block_responsive_styles( $block['attrs']['responsiveControlsCss'] );
 			}
 
 			return $block_content;
 		}
 
-		// Render block css
-		private function enqueue_block_responsive_styles( $style, $priority = 10 ) {
-
-			$action_hook_name = 'wp_footer';
-			if ( wp_is_block_theme() ) {
-				$action_hook_name = 'wp_head';
+		// Collect and render block css
+		private function enqueue_block_responsive_styles( $style, $priority = 20 ) {
+			if ( empty( $style ) ) {
+				return;
 			}
-			add_action(
-				$action_hook_name,
-				static function () use ( $style ) {
-					echo '<style>' . wp_kses_post( wp_unslash( $style ) ) . "</style>\n";
-				},
-				$priority
-			);
+
+			self::$collected_styles[] = $style;
+
+			if ( ! self::$footer_hook_added ) {
+				self::$footer_hook_added = true;
+				add_action(
+					'wp_footer',
+					array( __CLASS__, 'print_collected_styles' ),
+					$priority
+				);
+			}
+		}
+
+		/**
+		 * Print all collected responsive block styles in the footer.
+		 */
+		public static function print_collected_styles() {
+			if ( empty( self::$collected_styles ) ) {
+				return;
+			}
+
+			$unique_styles = array_unique( self::$collected_styles );
+			$combined_css  = implode( "\n", $unique_styles );
+			echo '<style id="responsive-controls-frontend-css">' . wp_strip_all_tags( wp_unslash( $combined_css ) ) . "</style>\n";
 		}
 
 	}
