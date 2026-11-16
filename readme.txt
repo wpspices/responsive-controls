@@ -39,7 +39,6 @@ Add following responsive controls to blocks:
 * Fixed: Upgraded deprecated ButtonGroup to ToggleGroupControl and accessible button groups for WordPress 6.8+ compatibility.
 * Fixed: Prevented unnecessary editor dirty state on initial post load.
 * Enhancement: Real-time synchronous CSS compilation in editor canvas.
-* Tested up to WordPress 7.1.
 
 = 1.0.3 =
 * Fixed responsive control toggle
