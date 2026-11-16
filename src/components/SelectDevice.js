@@ -1,9 +1,17 @@
 import { __ } from '@wordpress/i18n';
+import { store as editorStore } from '@wordpress/editor';
 import {
-	store as editorStore,
-} from '@wordpress/editor';
-import { Button, ButtonGroup } from '@wordpress/components';
+	Button,
+	ToggleGroupControl,
+	__experimentalToggleGroupControl,
+	ToggleGroupControlOptionIcon,
+	__experimentalToggleGroupControlOptionIcon,
+} from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
+
+const ToggleGroup = ToggleGroupControl || __experimentalToggleGroupControl;
+const ToggleGroupOptionIcon =
+	ToggleGroupControlOptionIcon || __experimentalToggleGroupControlOptionIcon;
 
 const SelectDevice = () => {
 	const deviceType = useSelect( ( select ) => {
@@ -17,27 +25,56 @@ const SelectDevice = () => {
 		Mobile: 'smartphone',
 	};
 
-	return (
-		<div className="responsive-controls-select-device-icon-group">
-			<ButtonGroup>
-				{ [ 'Desktop', 'Tablet', 'Mobile' ].map( ( deviceOption ) => {
-					return (
-						<Button
+	const deviceLabels = {
+		Desktop: __( 'Desktop', 'responsive-controls' ),
+		Tablet: __( 'Tablet', 'responsive-controls' ),
+		Mobile: __( 'Mobile', 'responsive-controls' ),
+	};
+
+	if ( ToggleGroup && ToggleGroupOptionIcon ) {
+		return (
+			<div className="responsive-controls-select-device-icon-group">
+				<ToggleGroup
+					label={ __( 'Device preview', 'responsive-controls' ) }
+					value={ deviceType }
+					onChange={ ( nextDevice ) => setDeviceType( nextDevice ) }
+					hideLabelFromVision
+					isBlock={ false }
+					size="default"
+					__nextHasNoMarginBottom
+					__next40pxDefaultSize
+				>
+					{ [ 'Desktop', 'Tablet', 'Mobile' ].map( ( deviceOption ) => (
+						<ToggleGroupOptionIcon
 							key={ deviceOption }
-							isSmall
-							variant={
-								deviceOption === deviceType
-									? 'primary'
-									: undefined
-							}
-							onClick={ () =>
-								setDeviceType( deviceOption )
-							}
+							value={ deviceOption }
 							icon={ deviceIcon[ deviceOption ] }
-						></Button>
-					);
-				} ) }
-			</ButtonGroup>
+							label={ deviceLabels[ deviceOption ] }
+						/>
+					) ) }
+				</ToggleGroup>
+			</div>
+		);
+	}
+
+	return (
+		<div
+			className="responsive-controls-select-device-icon-group responsive-controls-device-toggle-group"
+			role="group"
+			aria-label={ __( 'Device preview', 'responsive-controls' ) }
+		>
+			{ [ 'Desktop', 'Tablet', 'Mobile' ].map( ( deviceOption ) => (
+				<Button
+					key={ deviceOption }
+					size="compact"
+					variant={ deviceOption === deviceType ? 'primary' : 'tertiary' }
+					onClick={ () => setDeviceType( deviceOption ) }
+					icon={ deviceIcon[ deviceOption ] }
+					label={ deviceLabels[ deviceOption ] }
+					showTooltip
+					__next40pxDefaultSize
+				/>
+			) ) }
 		</div>
 	);
 };

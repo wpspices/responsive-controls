@@ -1,4 +1,4 @@
-import { PanelBody, Button, ButtonGroup } from '@wordpress/components';
+import { PanelBody, Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 const HideInDevice = ( props ) => {
@@ -10,55 +10,52 @@ const HideInDevice = ( props ) => {
 		responsiveControlsHideInMobile,
 	} = attributes;
 
-	const HideInDeviceOptions = {
-		desktop: responsiveControlsHideInDesktop,
-		tablet: responsiveControlsHideInTab,
-		smartphone: responsiveControlsHideInMobile,
-	};
-
-	const setHideInDevice = ( deviceName ) => {
-		let hideValue = HideInDeviceOptions[ deviceName ] ? false : true;
-		if ( 'desktop' === deviceName ) {
-			setAttributes( { responsiveControlsHideInDesktop: hideValue } );
-		}
-		if ( 'tablet' === deviceName ) {
-			setAttributes( { responsiveControlsHideInTab: hideValue } );
-		}
-		if ( 'smartphone' === deviceName ) {
-			setAttributes( { responsiveControlsHideInMobile: hideValue } );
-		}
-	};
+	const deviceConfigs = [
+		{
+			key: 'desktop',
+			active: !! responsiveControlsHideInDesktop,
+			attr: 'responsiveControlsHideInDesktop',
+			label: __( 'Hide on Desktop', 'responsive-controls' ),
+		},
+		{
+			key: 'tablet',
+			active: !! responsiveControlsHideInTab,
+			attr: 'responsiveControlsHideInTab',
+			label: __( 'Hide on Tablet', 'responsive-controls' ),
+		},
+		{
+			key: 'smartphone',
+			active: !! responsiveControlsHideInMobile,
+			attr: 'responsiveControlsHideInMobile',
+			label: __( 'Hide on Mobile', 'responsive-controls' ),
+		},
+	];
 
 	return (
-		<>
-			<PanelBody
-				title={ __( 'Hide in device', 'responsive-controls' ) }
-				initialOpen={ true }
+		<PanelBody
+			title={ __( 'Hide in device', 'responsive-controls' ) }
+			initialOpen={ true }
+		>
+			<div
+				className="responsive-controls-device-toggle-group"
+				role="group"
+				aria-label={ __( 'Hide in device', 'responsive-controls' ) }
 			>
-				<ButtonGroup>
-					{ [ 'desktop', 'tablet', 'smartphone' ].map(
-						( deviceName ) => {
-							return (
-								<Button
-									key={ deviceName }
-									isSmall
-									isDestructive
-									variant={
-										HideInDeviceOptions[ deviceName ]
-											? 'primary'
-											: undefined
-									}
-									onClick={ () =>
-										setHideInDevice( deviceName )
-									}
-									icon={ deviceName }
-								></Button>
-							);
-						}
-					) }
-				</ButtonGroup>
-			</PanelBody>
-		</>
+				{ deviceConfigs.map( ( { key, active, attr, label } ) => (
+					<Button
+						key={ key }
+						size="compact"
+						variant={ active ? 'primary' : 'tertiary' }
+						isDestructive={ active }
+						onClick={ () => setAttributes( { [ attr ]: ! active } ) }
+						icon={ key }
+						label={ label }
+						showTooltip
+						__next40pxDefaultSize
+					/>
+				) ) }
+			</div>
+		</PanelBody>
 	);
 };
 
