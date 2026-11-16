@@ -13,3 +13,5 @@ package.json
 package-lock.json
 phpcs.xml
 README.md
+AGENTS.md
+LEARNINGS.md
